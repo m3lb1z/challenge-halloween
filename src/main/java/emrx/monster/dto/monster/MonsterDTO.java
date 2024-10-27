@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import emrx.monster.dto.AppearanceDTO;
 import emrx.monster.dto.monster.validation.OnCreate;
+import emrx.monster.dto.monster.validation.OnUpdate;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -33,7 +34,7 @@ public class MonsterDTO {
     private String type;
 
     @JsonView(Views.Basic.class)
-    @Range(groups = OnCreate.class, min = 1, max = 10)
+    @Range(groups = {OnCreate.class, OnUpdate.class}, min = 1, max = 10)
     private int dangerLevel;
 
     @JsonView(Views.Create.class)

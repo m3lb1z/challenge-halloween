@@ -5,6 +5,7 @@ import emrx.monster.dto.AppearanceDTO;
 import emrx.monster.dto.monster.MonsterDTO;
 import emrx.monster.dto.monster.Views;
 import emrx.monster.dto.monster.validation.OnCreate;
+import emrx.monster.dto.monster.validation.OnUpdate;
 import emrx.monster.mapper.AppearanceMapper;
 import emrx.monster.mapper.MonsterMapper;
 import emrx.monster.model.Appearance;
@@ -69,7 +70,11 @@ public class MonsterController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MonsterDTO> updateMonster(@PathVariable Long id, @RequestBody MonsterDTO monsterDTO) {
+    @JsonView(Views.Update.class)
+    public ResponseEntity<MonsterDTO> updateMonster(
+            @PathVariable Long id,
+            @Validated(OnUpdate.class)
+            @RequestBody @JsonView(Views.Update.class) MonsterDTO monsterDTO) {
         Monster updatedMonster = monsterService.updateMonster(id, monsterDTO);
         if (updatedMonster != null) {
             return new ResponseEntity<>(monsterMapper.toDTO(updatedMonster), HttpStatus.OK);
