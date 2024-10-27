@@ -35,7 +35,7 @@ classDiagram
     class Appearance {
         -Long id
         -String location
-        -LocalDate date
+        -Date date
         -int witnesses
         -Monster monster
         +getters()
@@ -48,29 +48,36 @@ classDiagram
         +findById(Long id) Optional~Monster~
         +save(Monster monster) Monster
         +deleteById(Long id) void
+        +existsByNameIgnoreCase(String name) boolean
         +findByType(String type) List~Monster~
-        +findByDangerLevelGreaterThan(int level) List~Monster~
+        +findByDangerLevelGreaterThanEqual(int level) List~Monster~
     }
 
     class WeaknessRepository {
         <<interface>>
         +findAll() List~Weakness~
         +findById(Long id) Optional~Weakness~
-        +findByName(String name) Optional~Weakness~
+        +findByNameIgnoreCase(String name) Optional~Weakness~
+        +existsByNameIgnoreCase(String name) boolean
+        +findAllByMonsterId(Long monsterId) Set~Weakness~
     }
 
     class PowerRepository {
         <<interface>>
         +findAll() List~Power~
         +findById(Long id) Optional~Power~
-        +findByName(String name) Optional~Power~
+        +findByNameIgnoreCase(String name) Optional~Power~
+        +existsByNameIgnoreCase(String name) boolean
+        +findAllByMonsterId(Long monsterId) Set~Power~
     }
 
     class AppearanceRepository {
         <<interface>>
         +findAll() List~Appearance~
         +findById(Long id) Optional~Appearance~
-        +findByMonsterId(String monsterId) List~Appearance~
+        +findAllByMonsterId(Long monsterId) List~Appearance~
+        +findByIdAndMonsterId(Long id, Long monsterId) Optional~Appearance~
+        +deleteByIdAndMonsterId(Long id, Long monsterId) void
     }
 
     class MonsterDTO {
@@ -88,6 +95,13 @@ classDiagram
         -LocalDateTime updatedAt
     }
 
+    class AppearanceDTO {
+        -Long id
+        -String location
+        -Date date
+        -int witnesses
+    }
+
     class MonsterService {
         -MonsterRepository monsterRepository
         -WeaknessRepository weaknessRepository
@@ -96,34 +110,27 @@ classDiagram
         +getAllMonsters() List~Monster~
         +getMonsterById(Long id) Monster
         +getMonsterFullById(Long id) MonsterDTO
-        +createMonster(Monster monster) Monster
-        +updateMonster(Long id, Monster monster) Monster
+        +createMonster(MonsterDTO monsterDTO) Monster
+        +updateMonster(Long id, MonsterDTO monsterDTO) Monster
         +deleteMonster(Long id) void
         +getMonstersByType(String type) List~Monster~
         +getDangerousMonsters(int level) List~Monster~
-    }
-
-    class MonsterController {
-        -MonsterService monsterService
-        +getAllMonsters() ResponseEntity~List~MonsterDTO~~
-        +getMonster(Long id) ResponseEntity~MonsterDTO~
-        +getMonsterFull(Long id) ResponseEntity~MonsterDTO~
-        +createMonster(MonsterDTO monster) ResponseEntity~MonsterDTO~
-        +updateMonster(Long id, MonsterDTO monster) ResponseEntity~MonsterDTO~
-        +deleteMonster(Long id) ResponseEntity~void~
-        +getMonstersByType(String type) ResponseEntity~List~MonsterDTO~~
-        +getDangerousMonsters(int level) ResponseEntity~List~MonsterDTO~~
+        +getAppearancesByMonsterId(Long monsterId) List~Appearance~
+        +getAppearanceById(Long monsterId, Long id) Appearance
+        +createAppearance(Long monsterId, AppearanceDTO appearanceDTO) Appearance
+        +updateAppearance(Long monsterId, Long id, AppearanceDTO appearanceDTO) Appearance
+        +deleteAppearance(Long monsterId, Long id) void
     }
 
     Monster "1" *-- "*" Appearance
     Monster "*" -- "*" Weakness
     Monster "*" -- "*" Power
-    MonsterController --> MonsterService : uses
-    MonsterService --> MonsterRepository : uses
-    MonsterService --> WeaknessRepository : uses
-    MonsterService --> PowerRepository : uses
-    MonsterService --> AppearanceRepository : uses
-    MonsterRepository --> Monster : manages
-    WeaknessRepository --> Weakness : manages
-    PowerRepository --> Power : manages
-    AppearanceRepository --> Appearance : manages
+    MonsterDTO -- AppearanceDTO : contains
+    MonsterService -- MonsterRepository : uses >
+    MonsterService -- WeaknessRepository : uses >
+    MonsterService -- PowerRepository : uses >
+    MonsterService -- AppearanceRepository : uses >
+    MonsterRepository -- Monster : manages >
+    WeaknessRepository -- Weakness : manages >
+    PowerRepository -- Power : manages >
+    AppearanceRepository -- Appearance : manages >
