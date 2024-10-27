@@ -1,0 +1,129 @@
+classDiagram
+    class Monster {
+        -Long id
+        -String name
+        -String type
+        -int dangerLevel
+        -String habitat
+        -String description
+        -String imageUrl
+        -LocalDateTime createdAt
+        -LocalDateTime updatedAt
+        -Set~Weakness~ weaknesses
+        -Set~Power~ powers
+        -List~Appearance~ appearances
+        +getters()
+        +setters()
+    }
+
+    class Weakness {
+        -Long id
+        -String name
+        -Set~Monster~ monsters
+        +getters()
+        +setters()
+    }
+
+    class Power {
+        -Long id
+        -String name
+        -Set~Monster~ monsters
+        +getters()
+        +setters()
+    }
+
+    class Appearance {
+        -Long id
+        -String location
+        -LocalDate date
+        -int witnesses
+        -Monster monster
+        +getters()
+        +setters()
+    }
+
+    class MonsterRepository {
+        <<interface>>
+        +findAll() List~Monster~
+        +findById(Long id) Optional~Monster~
+        +save(Monster monster) Monster
+        +deleteById(Long id) void
+        +findByType(String type) List~Monster~
+        +findByDangerLevelGreaterThan(int level) List~Monster~
+    }
+
+    class WeaknessRepository {
+        <<interface>>
+        +findAll() List~Weakness~
+        +findById(Long id) Optional~Weakness~
+        +findByName(String name) Optional~Weakness~
+    }
+
+    class PowerRepository {
+        <<interface>>
+        +findAll() List~Power~
+        +findById(Long id) Optional~Power~
+        +findByName(String name) Optional~Power~
+    }
+
+    class AppearanceRepository {
+        <<interface>>
+        +findAll() List~Appearance~
+        +findById(Long id) Optional~Appearance~
+        +findByMonsterId(String monsterId) List~Appearance~
+    }
+
+    class MonsterDTO {
+        -Long id
+        -String name
+        -String type
+        -int dangerLevel
+        -List~String~ weaknesses
+        -List~String~ powers
+        -List~AppearanceDTO~ appearances
+        -String habitat
+        -String description
+        -String imageUrl
+        -LocalDateTime createdAt
+        -LocalDateTime updatedAt
+    }
+
+    class MonsterService {
+        -MonsterRepository monsterRepository
+        -WeaknessRepository weaknessRepository
+        -PowerRepository powerRepository
+        -AppearanceRepository appearanceRepository
+        +getAllMonsters() List~Monster~
+        +getMonsterById(Long id) Monster
+        +getMonsterFullById(Long id) MonsterDTO
+        +createMonster(Monster monster) Monster
+        +updateMonster(Long id, Monster monster) Monster
+        +deleteMonster(Long id) void
+        +getMonstersByType(String type) List~Monster~
+        +getDangerousMonsters(int level) List~Monster~
+    }
+
+    class MonsterController {
+        -MonsterService monsterService
+        +getAllMonsters() ResponseEntity~List~MonsterDTO~~
+        +getMonster(Long id) ResponseEntity~MonsterDTO~
+        +getMonsterFull(Long id) ResponseEntity~MonsterDTO~
+        +createMonster(MonsterDTO monster) ResponseEntity~MonsterDTO~
+        +updateMonster(Long id, MonsterDTO monster) ResponseEntity~MonsterDTO~
+        +deleteMonster(Long id) ResponseEntity~void~
+        +getMonstersByType(String type) ResponseEntity~List~MonsterDTO~~
+        +getDangerousMonsters(int level) ResponseEntity~List~MonsterDTO~~
+    }
+
+    Monster "1" *-- "*" Appearance
+    Monster "*" -- "*" Weakness
+    Monster "*" -- "*" Power
+    MonsterController --> MonsterService : uses
+    MonsterService --> MonsterRepository : uses
+    MonsterService --> WeaknessRepository : uses
+    MonsterService --> PowerRepository : uses
+    MonsterService --> AppearanceRepository : uses
+    MonsterRepository --> Monster : manages
+    WeaknessRepository --> Weakness : manages
+    PowerRepository --> Power : manages
+    AppearanceRepository --> Appearance : manages
