@@ -3,6 +3,9 @@ package emrx.monster.controller;
 import emrx.monster.dto.PowerDTO;
 import emrx.monster.dto.WeaknessDTO;
 import emrx.monster.service.TraitService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,11 @@ public class TraitController {
 
     // Endpoints para Power
 
+    @Operation(summary = "Obtener todos los poderes")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "204", description = "No hay contenido")
+    })
     @GetMapping("/powers")
     public ResponseEntity<List<PowerDTO>> getAllPowers() {
         List<PowerDTO> powers = traitService.getAllPowers();
@@ -32,6 +40,11 @@ public class TraitController {
         return new ResponseEntity<>(powers, HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener un poder por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "Poder no encontrado")
+    })
     @GetMapping("/powers/{id}")
     public ResponseEntity<PowerDTO> getPowerById(@PathVariable Long id) {
         PowerDTO power = traitService.getPowerById(id);
@@ -41,6 +54,11 @@ public class TraitController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(summary = "Crear un nuevo poder")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Poder creado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
     @PostMapping("/powers")
     public ResponseEntity<PowerDTO> createPower(@RequestBody PowerDTO powerDTO, UriComponentsBuilder uriComponentsBuilder) {
         PowerDTO createdPower = traitService.createPower(powerDTO);
@@ -50,6 +68,12 @@ public class TraitController {
         return ResponseEntity.created(location).body(createdPower);
     }
 
+    @Operation(summary = "Actualizar un poder por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Poder actualizado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos"),
+            @ApiResponse(responseCode = "404", description = "Poder no encontrado")
+    })
     @PutMapping("/powers/{id}")
     public ResponseEntity<PowerDTO> updatePower(@PathVariable Long id, @RequestBody PowerDTO powerDTO) {
         PowerDTO updatedPower = traitService.updatePower(id, powerDTO);
@@ -59,6 +83,11 @@ public class TraitController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(summary = "Eliminar un poder por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Poder eliminado exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Poder no encontrado")
+    })
     @DeleteMapping("/powers/{id}")
     public ResponseEntity<Void> deletePower(@PathVariable Long id) {
         traitService.deletePower(id);
@@ -67,6 +96,11 @@ public class TraitController {
 
     // Endpoints para Weakness
 
+    @Operation(summary = "Obtener todas las debilidades")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "204", description = "No hay contenido")
+    })
     @GetMapping("/weaknesses")
     public ResponseEntity<List<WeaknessDTO>> getAllWeaknesses() {
         List<WeaknessDTO> weaknesses = traitService.getAllWeaknesses();
@@ -76,6 +110,11 @@ public class TraitController {
         return new ResponseEntity<>(weaknesses, HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener una debilidad por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "Debilidad no encontrada")
+    })
     @GetMapping("/weaknesses/{id}")
     public ResponseEntity<WeaknessDTO> getWeaknessById(@PathVariable Long id) {
         WeaknessDTO weakness = traitService.getWeaknessById(id);
@@ -85,6 +124,11 @@ public class TraitController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(summary = "Crear una nueva debilidad")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Debilidad creada exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
     @PostMapping("/weaknesses")
     public ResponseEntity<WeaknessDTO> createWeakness(@RequestBody WeaknessDTO weaknessDTO, UriComponentsBuilder uriComponentsBuilder) {
         WeaknessDTO createdWeakness = traitService.createWeakness(weaknessDTO);
@@ -94,6 +138,12 @@ public class TraitController {
         return ResponseEntity.created(location).body(createdWeakness);
     }
 
+    @Operation(summary = "Actualizar una debilidad por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Debilidad actualizada exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos"),
+            @ApiResponse(responseCode = "404", description = "Debilidad no encontrada")
+    })
     @PutMapping("/weaknesses/{id}")
     public ResponseEntity<WeaknessDTO> updateWeakness(@PathVariable Long id, @RequestBody WeaknessDTO weaknessDTO) {
         WeaknessDTO updatedWeakness = traitService.updateWeakness(id, weaknessDTO);
@@ -103,6 +153,11 @@ public class TraitController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(summary = "Eliminar una debilidad por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Debilidad eliminada exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Debilidad no encontrada")
+    })
     @DeleteMapping("/weaknesses/{id}")
     public ResponseEntity<Void> deleteWeakness(@PathVariable Long id) {
         traitService.deleteWeakness(id);

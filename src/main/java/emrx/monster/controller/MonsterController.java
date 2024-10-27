@@ -11,6 +11,9 @@ import emrx.monster.mapper.MonsterMapper;
 import emrx.monster.model.Appearance;
 import emrx.monster.model.Monster;
 import emrx.monster.service.MonsterService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +40,11 @@ public class MonsterController {
         this.appearanceMapper = appearanceMapper;
     }
 
+    @Operation(summary = "Obtener todos los monstruos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "204", description = "No hay contenido")
+    })
     @GetMapping
     @JsonView(Views.Basic.class)
     public ResponseEntity<List<MonsterDTO>> getAllMonsters() {
@@ -47,6 +55,11 @@ public class MonsterController {
         return new ResponseEntity<>(monsterMapper.toDTOList(monsters), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener un monstruo por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "Monstruo no encontrado")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<MonsterDTO> getMonster(@PathVariable Long id) {
         Monster monster = monsterService.getMonsterFullById(id);
@@ -56,6 +69,11 @@ public class MonsterController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(summary = "Crear un nuevo monstruo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Monstruo creado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
     @PostMapping
     @JsonView(Views.Create.class)
     public ResponseEntity<MonsterDTO> createMonster(
@@ -69,6 +87,12 @@ public class MonsterController {
         return ResponseEntity.created(location).body(monsterMapper.toDTO(createdMonster));
     }
 
+    @Operation(summary = "Actualizar un monstruo por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Monstruo actualizado exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos"),
+            @ApiResponse(responseCode = "404", description = "Monstruo no encontrado")
+    })
     @PutMapping("/{id}")
     @JsonView(Views.Update.class)
     public ResponseEntity<MonsterDTO> updateMonster(
@@ -82,12 +106,21 @@ public class MonsterController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(summary = "Eliminar un monstruo por ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Monstruo eliminado exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Monstruo no encontrado")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMonster(@PathVariable Long id) {
         monsterService.deleteMonster(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Operation(summary = "Obtener monstruos por tipo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa")
+    })
     @GetMapping("/type/{type}")
     @JsonView(Views.Basic.class)
     public ResponseEntity<List<MonsterDTO>> getMonstersByType(@PathVariable String type) {
@@ -95,6 +128,10 @@ public class MonsterController {
         return new ResponseEntity<>(monsterMapper.toDTOList(monsters), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener monstruos peligrosos por nivel de peligro")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa")
+    })
     @GetMapping("/danger/{level}")
     @JsonView(Views.Basic.class)
     public ResponseEntity<List<MonsterDTO>> getDangerousMonsters(@PathVariable int level) {
@@ -104,12 +141,22 @@ public class MonsterController {
 
     // Methods Monster By Appearance
 
+    @Operation(summary = "Obtener apariciones de un monstruo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "Monstruo no encontrado")
+    })
     @GetMapping("/{monsterId}/appearances")
     public ResponseEntity<List<AppearanceDTO>> getAppearancesByMonsterId(@PathVariable Long monsterId) {
         List<Appearance> appearances = monsterService.getAppearancesByMonsterId(monsterId);
         return new ResponseEntity<>(appearanceMapper.toDTOList(appearances), HttpStatus.OK);
     }
 
+    @Operation(summary = "Obtener una aparición de un monstruo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "Aparición no encontrada")
+    })
     @GetMapping("/{monsterId}/appearances/{id}")
     public ResponseEntity<AppearanceDTO> getAppearanceById(@PathVariable Long monsterId, @PathVariable Long id) {
         Appearance appearance = monsterService.getAppearanceById(monsterId, id);
@@ -119,6 +166,11 @@ public class MonsterController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(summary = "Crear una nueva aparición para un monstruo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Aparición creada exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
     @PostMapping("/{monsterId}/appearances")
     public ResponseEntity<AppearanceDTO> createAppearance(
             @PathVariable Long monsterId,
@@ -131,6 +183,12 @@ public class MonsterController {
         return ResponseEntity.created(location).body(appearanceMapper.toDTO(createdAppearance));
     }
 
+    @Operation(summary = "Actualizar una aparición de un monstruo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Aparición actualizada exitosamente"),
+            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos"),
+            @ApiResponse(responseCode = "404", description = "Aparición no encontrada")
+    })
     @PutMapping("/{monsterId}/appearances/{id}")
     public ResponseEntity<AppearanceDTO> updateAppearance(@PathVariable Long monsterId, @PathVariable Long id, @RequestBody AppearanceDTO appearanceDTO) {
         Appearance updatedAppearance = monsterService.updateAppearance(monsterId, id, appearanceDTO);
@@ -140,6 +198,11 @@ public class MonsterController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Operation(summary = "Eliminar una aparición de un monstruo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Aparición eliminada exitosamente"),
+            @ApiResponse(responseCode = "404", description = "Aparición no encontrada")
+    })
     @DeleteMapping("/{monsterId}/appearances/{id}")
     public ResponseEntity<Void> deleteAppearance(@PathVariable Long monsterId, @PathVariable Long id) {
         monsterService.deleteAppearance(monsterId, id);
