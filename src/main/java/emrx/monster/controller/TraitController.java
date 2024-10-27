@@ -6,7 +6,9 @@ import emrx.monster.service.TraitService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,6 +26,9 @@ public class TraitController {
     @GetMapping("/powers")
     public ResponseEntity<List<PowerDTO>> getAllPowers() {
         List<PowerDTO> powers = traitService.getAllPowers();
+        if (powers.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(powers, HttpStatus.OK);
     }
 
@@ -37,9 +42,12 @@ public class TraitController {
     }
 
     @PostMapping("/powers")
-    public ResponseEntity<PowerDTO> createPower(@RequestBody PowerDTO powerDTO) {
+    public ResponseEntity<PowerDTO> createPower(@RequestBody PowerDTO powerDTO, UriComponentsBuilder uriComponentsBuilder) {
         PowerDTO createdPower = traitService.createPower(powerDTO);
-        return new ResponseEntity<>(createdPower, HttpStatus.CREATED);
+        URI location = uriComponentsBuilder.path("/traits/powers/{id}")
+                .buildAndExpand(createdPower.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(createdPower);
     }
 
     @PutMapping("/powers/{id}")
@@ -62,6 +70,9 @@ public class TraitController {
     @GetMapping("/weaknesses")
     public ResponseEntity<List<WeaknessDTO>> getAllWeaknesses() {
         List<WeaknessDTO> weaknesses = traitService.getAllWeaknesses();
+        if (weaknesses.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(weaknesses, HttpStatus.OK);
     }
 
@@ -75,9 +86,12 @@ public class TraitController {
     }
 
     @PostMapping("/weaknesses")
-    public ResponseEntity<WeaknessDTO> createWeakness(@RequestBody WeaknessDTO weaknessDTO) {
+    public ResponseEntity<WeaknessDTO> createWeakness(@RequestBody WeaknessDTO weaknessDTO, UriComponentsBuilder uriComponentsBuilder) {
         WeaknessDTO createdWeakness = traitService.createWeakness(weaknessDTO);
-        return new ResponseEntity<>(createdWeakness, HttpStatus.CREATED);
+        URI location = uriComponentsBuilder.path("/traits/weaknesses/{id}")
+                .buildAndExpand(createdWeakness.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(createdWeakness);
     }
 
     @PutMapping("/weaknesses/{id}")
