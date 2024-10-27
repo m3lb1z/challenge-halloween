@@ -1,14 +1,22 @@
 package emrx.monster.infra.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionsAdvice {
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity handleError404() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity handleError400(MethodArgumentNotValidException ex) {
