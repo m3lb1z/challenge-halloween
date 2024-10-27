@@ -1,4 +1,4 @@
-package emrx.monster.dto;
+package emrx.monster.dto.monster;
 
 public class Views {
     public static class Basic {}

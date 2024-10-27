@@ -15,7 +15,7 @@ public class Power {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "power_id")
     private Long id;
-
+    @Column(name = "name", unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "powers")

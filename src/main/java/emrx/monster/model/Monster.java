@@ -22,7 +22,7 @@ public class Monster {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "monster_id")
     private Long id;
-
+    @Column(name = "name", unique = true)
     private String name;
     private String type;
     private int dangerLevel;

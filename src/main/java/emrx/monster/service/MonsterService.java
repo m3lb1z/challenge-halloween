@@ -1,7 +1,7 @@
 package emrx.monster.service;
 
-import emrx.monster.dto.MonsterDTO;
-import emrx.monster.dto.validation.MonsterValidation;
+import emrx.monster.dto.monster.MonsterDTO;
+import emrx.monster.dto.monster.validation.MonsterValidation;
 import emrx.monster.mapper.AppearanceMapper;
 import emrx.monster.mapper.MonsterMapper;
 import emrx.monster.model.Appearance;
@@ -12,7 +12,6 @@ import emrx.monster.repository.AppearanceRepository;
 import emrx.monster.repository.MonsterRepository;
 import emrx.monster.repository.PowerRepository;
 import emrx.monster.repository.WeaknessRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -75,12 +74,24 @@ public class MonsterService {
         Monster updatingMonster = monsterMapper.toEntity(monsterDTO);
         Monster existingMonster = monsterRepository.findById(id).orElse(null);
         if (existingMonster != null) {
-            existingMonster.setName(updatingMonster.getName());
-            existingMonster.setType(updatingMonster.getType());
-            existingMonster.setDangerLevel(updatingMonster.getDangerLevel());
-            existingMonster.setHabitat(updatingMonster.getHabitat());
-            existingMonster.setDescription(updatingMonster.getDescription());
-            existingMonster.setImageUrl(updatingMonster.getImageUrl());
+            if (updatingMonster.getName() != null && !updatingMonster.getName().isBlank()) {
+                existingMonster.setName(updatingMonster.getName());
+            }
+            if (updatingMonster.getType() != null && !updatingMonster.getType().isBlank()) {
+                existingMonster.setType(updatingMonster.getType());
+            }
+            if (updatingMonster.getDangerLevel() > 0 && updatingMonster.getDangerLevel() <= 10) {
+                existingMonster.setDangerLevel(updatingMonster.getDangerLevel());
+            }
+            if (updatingMonster.getHabitat() != null && !updatingMonster.getHabitat().isBlank()) {
+                existingMonster.setHabitat(updatingMonster.getHabitat());
+            }
+            if (updatingMonster.getDescription() != null && !updatingMonster.getDescription().isBlank()) {
+                existingMonster.setDescription(updatingMonster.getDescription());
+            }
+            if (updatingMonster.getImageUrl() != null && !updatingMonster.getImageUrl().isBlank()) {
+                existingMonster.setImageUrl(updatingMonster.getImageUrl());
+            }
             if(updatingMonster.getWeaknesses() != null) {
                 existingMonster.setWeaknesses(updatingMonster.getWeaknesses());
             }

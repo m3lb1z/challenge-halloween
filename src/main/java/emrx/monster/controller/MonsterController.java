@@ -1,14 +1,16 @@
 package emrx.monster.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import emrx.monster.dto.MonsterDTO;
-import emrx.monster.dto.Views;
+import emrx.monster.dto.monster.MonsterDTO;
+import emrx.monster.dto.monster.Views;
+import emrx.monster.dto.monster.validation.OnCreate;
 import emrx.monster.mapper.AppearanceMapper;
 import emrx.monster.mapper.MonsterMapper;
 import emrx.monster.model.Monster;
 import emrx.monster.service.MonsterService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,7 +50,9 @@ public class MonsterController {
 
     @PostMapping
     @JsonView(Views.Create.class)
-    public ResponseEntity<MonsterDTO> createMonster(@RequestBody @JsonView(Views.Create.class) MonsterDTO monsterDTO) {
+    public ResponseEntity<MonsterDTO> createMonster(
+            @Validated(OnCreate.class)
+            @RequestBody @JsonView(Views.Create.class) MonsterDTO monsterDTO) {
         Monster createdMonster = monsterService.createMonster(monsterDTO);
         return new ResponseEntity<>(monsterMapper.toDTO(createdMonster), HttpStatus.CREATED);
     }

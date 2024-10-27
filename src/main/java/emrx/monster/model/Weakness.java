@@ -19,7 +19,7 @@ public class Weakness {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "weakness_id")
     private Long id;
-
+    @Column(name = "name", unique = true)
     private String name;
 
     @ManyToMany(mappedBy = "weaknesses")

@@ -1,6 +1,6 @@
 package emrx.monster.mapper;
 
-import emrx.monster.dto.MonsterDTO;
+import emrx.monster.dto.monster.MonsterDTO;
 import emrx.monster.model.Monster;
 import emrx.monster.model.Power;
 import emrx.monster.model.Weakness;

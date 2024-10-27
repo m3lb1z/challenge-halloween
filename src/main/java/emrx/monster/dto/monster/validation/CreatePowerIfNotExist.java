@@ -1,6 +1,6 @@
-package emrx.monster.dto.validation;
+package emrx.monster.dto.monster.validation;
 
-import emrx.monster.dto.MonsterDTO;
+import emrx.monster.dto.monster.MonsterDTO;
 import emrx.monster.model.Power;
 import emrx.monster.repository.PowerRepository;
 import org.springframework.stereotype.Component;
