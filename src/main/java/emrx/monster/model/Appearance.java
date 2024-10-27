@@ -1,23 +1,24 @@
 package emrx.monster.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 public class Appearance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "appearance_id")
     private Long id;
-
     private String location;
-    private LocalDate date;
+    private Date date;
     private int witnesses;
 
     @ManyToOne
@@ -40,11 +41,11 @@ public class Appearance {
         this.location = location;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

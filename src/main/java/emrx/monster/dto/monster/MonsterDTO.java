@@ -36,14 +36,14 @@ public class MonsterDTO {
     @Range(groups = OnCreate.class, min = 1, max = 10)
     private int dangerLevel;
 
-    @JsonView({Views.Full.class, Views.Create.class})
+    @JsonView(Views.Create.class)
     @NotNull(groups = OnCreate.class)
     private List<String> weaknesses;
 
-    @JsonView({Views.Full.class, Views.Create.class})
+    @JsonView(Views.Create.class)
     private List<String> powers;
 
-    @JsonView(Views.Full.class)
+    @JsonView
     private List<AppearanceDTO> appearances;
 
     @JsonView(Views.Basic.class)

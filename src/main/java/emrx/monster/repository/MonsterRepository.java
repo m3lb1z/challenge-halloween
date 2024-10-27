@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface MonsterRepository extends JpaRepository<Monster, Long> {
     boolean existsByNameIgnoreCase(String name);
     List<Monster> findByType(String type);
-    List<Monster> findByDangerLevelGreaterThan(int level);
+    List<Monster> findByDangerLevelGreaterThanEqual(int level);
 }

@@ -6,11 +6,11 @@ import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UniqueNameMonster implements MonsterValidation {
+public class UniqueMonsterName implements MonsterValidation {
 
     private final MonsterRepository monsterRepository;
 
-    public UniqueNameMonster(MonsterRepository monsterRepository) {
+    public UniqueMonsterName(MonsterRepository monsterRepository) {
         this.monsterRepository = monsterRepository;
     }
 

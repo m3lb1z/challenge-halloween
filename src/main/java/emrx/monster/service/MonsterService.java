@@ -1,5 +1,6 @@
 package emrx.monster.service;
 
+import emrx.monster.dto.AppearanceDTO;
 import emrx.monster.dto.monster.MonsterDTO;
 import emrx.monster.dto.monster.validation.MonsterValidation;
 import emrx.monster.mapper.AppearanceMapper;
@@ -53,7 +54,6 @@ public class MonsterService {
             Set<Weakness> weaknesses = weaknessRepository.findAllByMonsterId(id);
             Set<Power> powers = powerRepository.findAllByMonsterId(id);
             List<Appearance> appearances = appearanceRepository.findAllByMonsterId(id);
-
             monster.setWeaknesses(weaknesses);
             monster.setPowers(powers);
             monster.setAppearances(appearances);
@@ -113,6 +113,46 @@ public class MonsterService {
     }
 
     public List<Monster> getDangerousMonsters(int level) {
-        return monsterRepository.findByDangerLevelGreaterThan(level);
+        return monsterRepository.findByDangerLevelGreaterThanEqual(level);
+    }
+
+    // Methods Monster By Appearance
+
+    public List<Appearance> getAppearancesByMonsterId(Long monsterId) {
+        return appearanceRepository.findAllByMonsterId(monsterId);
+    }
+
+    public Appearance getAppearanceById(Long monsterId, Long id) {
+        return appearanceRepository.findByIdAndMonsterId(id, monsterId).orElse(null);
+    }
+
+    public Appearance createAppearance(Long monsterId, AppearanceDTO appearanceDTO) {
+        Monster monster = monsterRepository.findById(monsterId).orElse(null);
+        Appearance appearance = appearanceMapper.toEntity(appearanceDTO);
+        appearance.setMonster(monster);
+        return appearanceRepository.save(appearance);
+    }
+
+    public Appearance updateAppearance(Long monsterId, Long id, AppearanceDTO appearanceDTO) {
+        Appearance existingAppearance = appearanceRepository.findByIdAndMonsterId(id, monsterId).orElse(null);
+        if (existingAppearance != null) {
+            Appearance updatingAppearance = appearanceMapper.toEntity(appearanceDTO);
+            if (updatingAppearance.getLocation() != null && !updatingAppearance.getLocation().isBlank()) {
+                existingAppearance.setLocation(updatingAppearance.getLocation());
+            }
+            if (updatingAppearance.getDate() != null) {
+                existingAppearance.setDate(updatingAppearance.getDate());
+            }
+            if (updatingAppearance.getWitnesses() > 0 && updatingAppearance.getWitnesses() <= 10) {
+                existingAppearance.setWitnesses(updatingAppearance.getWitnesses());
+            }
+
+            return appearanceRepository.save(existingAppearance);
+        }
+        return null;
+    }
+
+    public void deleteAppearance(Long monsterId, Long id) {
+        appearanceRepository.deleteByIdAndMonsterId(id, monsterId);
     }
 }
