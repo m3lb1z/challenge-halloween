@@ -15,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -38,6 +40,9 @@ public class MonsterController {
     @JsonView(Views.Basic.class)
     public ResponseEntity<List<MonsterDTO>> getAllMonsters() {
         List<Monster> monsters = monsterService.getAllMonsters();
+        if (monsters.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(monsterMapper.toDTOList(monsters), HttpStatus.OK);
     }
 
@@ -54,9 +59,13 @@ public class MonsterController {
     @JsonView(Views.Create.class)
     public ResponseEntity<MonsterDTO> createMonster(
             @Validated(OnCreate.class)
-            @RequestBody @JsonView(Views.Create.class) MonsterDTO monsterDTO) {
+            @RequestBody @JsonView(Views.Create.class) MonsterDTO monsterDTO,
+            UriComponentsBuilder uriComponentsBuilder) {
         Monster createdMonster = monsterService.createMonster(monsterDTO);
-        return new ResponseEntity<>(monsterMapper.toDTO(createdMonster), HttpStatus.CREATED);
+        URI location = uriComponentsBuilder.path("/monsters/{id}")
+                .buildAndExpand(createdMonster.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(monsterMapper.toDTO(createdMonster));
     }
 
     @PutMapping("/{id}")
@@ -106,9 +115,15 @@ public class MonsterController {
     }
 
     @PostMapping("/{monsterId}/appearances")
-    public ResponseEntity<AppearanceDTO> createAppearance(@PathVariable Long monsterId, @RequestBody @Valid AppearanceDTO appearanceDTO) {
+    public ResponseEntity<AppearanceDTO> createAppearance(
+            @PathVariable Long monsterId,
+            @RequestBody @Valid AppearanceDTO appearanceDTO,
+            UriComponentsBuilder uriComponentsBuilder) {
         Appearance createdAppearance = monsterService.createAppearance(monsterId, appearanceDTO);
-        return new ResponseEntity<>(appearanceMapper.toDTO(createdAppearance), HttpStatus.CREATED);
+        URI location = uriComponentsBuilder.path("/monsters/{monsterId}/appearances/{id}")
+                .buildAndExpand(monsterId, createdAppearance.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(appearanceMapper.toDTO(createdAppearance));
     }
 
     @PutMapping("/{monsterId}/appearances/{id}")
