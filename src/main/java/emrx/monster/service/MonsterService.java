@@ -73,7 +73,6 @@ public class MonsterService {
     public Monster updateMonster(Long id, MonsterDTO monsterDTO) {
         validations.forEach(validation -> validation.validate(monsterDTO));
         Monster updatingMonster = monsterMapper.toEntity(monsterDTO);
-        System.out.println(updatingMonster.toString());
         Monster existingMonster = monsterRepository.findById(id).orElse(null);
         if (existingMonster != null) {
             existingMonster.setName(updatingMonster.getName());

@@ -29,7 +29,6 @@ public class MonsterMapper {
 
     public MonsterDTO toDTO(Monster monster) {
         MonsterDTO monsterDTO = modelMapper.map(monster, MonsterDTO.class);
-        System.out.println(monster.toString());
         if (monster.getPowers() != null) {
             List<String> powerNames = monster.getPowers().stream()
                     .map(Power::getName)
