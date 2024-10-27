@@ -3,7 +3,6 @@ package emrx.monster.controller;
 import emrx.monster.dto.PowerDTO;
 import emrx.monster.dto.WeaknessDTO;
 import emrx.monster.service.TraitService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/traits")
+@RequestMapping("/traits")
 public class TraitController {
 
     private final TraitService traitService;

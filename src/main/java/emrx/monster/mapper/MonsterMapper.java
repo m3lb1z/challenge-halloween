@@ -44,11 +44,9 @@ public class MonsterMapper {
             monsterDTO.setWeaknesses(weaknessNames);
         }
         if (monster.getAppearances() != null) {
-            monster.getAppearances().forEach(appearance -> System.out.println(appearance.getLocation()));
             List<AppearanceDTO> appearances = monster.getAppearances().stream()
                     .map(appearance -> modelMapper.map(appearance, AppearanceDTO.class))
                     .toList();
-            appearances.forEach(appearanceDTO -> System.out.println(appearanceDTO.getLocation()));
             monsterDTO.setAppearances(appearances);
         }
 
@@ -73,7 +71,6 @@ public class MonsterMapper {
             }
             monster.setPowers(powers);
         }
-
 
         return monster;
     }
