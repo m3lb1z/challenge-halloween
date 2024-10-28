@@ -3,6 +3,7 @@ package emrx.monster.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import emrx.monster.dto.AppearanceDTO;
 import emrx.monster.dto.monster.MonsterDTO;
+import emrx.monster.dto.monster.MonsterPage;
 import emrx.monster.dto.monster.Views;
 import emrx.monster.dto.monster.validation.OnCreate;
 import emrx.monster.dto.monster.validation.OnUpdate;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -40,19 +42,22 @@ public class MonsterController {
         this.appearanceMapper = appearanceMapper;
     }
 
-    @Operation(summary = "Obtener todos los monstruos")
+    @Operation(summary = "Obtener todos los monstruos", description = "Obtiene una lista paginada de todos los monstruos. Los parámetros de la request permiten paginar, definir el tamaño de la página y ordenar los resultados.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Operación exitosa"),
             @ApiResponse(responseCode = "204", description = "No hay contenido")
     })
     @GetMapping
-    @JsonView(Views.Basic.class)
-    public ResponseEntity<List<MonsterDTO>> getAllMonsters() {
-        List<Monster> monsters = monsterService.getAllMonsters();
+    public ResponseEntity<Page<MonsterPage>> getAllMonsters(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        Page<Monster> monsters = monsterService.getAllMonsters(page, size, sortBy);
         if (monsters.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(monsterMapper.toDTOList(monsters), HttpStatus.OK);
+        Page<MonsterPage> monsterDTOs = monsterMapper.toPageDTO(monsters);
+        return new ResponseEntity<>(monsterDTOs, HttpStatus.OK);
     }
 
     @Operation(summary = "Obtener un monstruo por ID")

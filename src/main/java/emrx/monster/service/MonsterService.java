@@ -13,6 +13,10 @@ import emrx.monster.repository.AppearanceRepository;
 import emrx.monster.repository.MonsterRepository;
 import emrx.monster.repository.PowerRepository;
 import emrx.monster.repository.WeaknessRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,8 +44,9 @@ public class MonsterService {
         this.validations = validations;
     }
 
-    public List<Monster> getAllMonsters() {
-        return monsterRepository.findAll();
+    public Page<Monster> getAllMonsters(int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return monsterRepository.findAll(pageable);
     }
 
     public Monster getMonsterById(Long id) {

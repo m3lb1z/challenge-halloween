@@ -2,12 +2,14 @@ package emrx.monster.mapper;
 
 import emrx.monster.dto.AppearanceDTO;
 import emrx.monster.dto.monster.MonsterDTO;
+import emrx.monster.dto.monster.MonsterPage;
 import emrx.monster.model.Monster;
 import emrx.monster.model.Power;
 import emrx.monster.model.Weakness;
 import emrx.monster.repository.PowerRepository;
 import emrx.monster.repository.WeaknessRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -86,4 +88,9 @@ public class MonsterMapper {
                 .map(this::toEntity)
                 .collect(Collectors.toList());
     }
+
+    public Page<MonsterPage> toPageDTO(Page<Monster> monsters) {
+        return monsters.map(monster -> modelMapper.map(monster, MonsterPage.class));
+    }
+
 }
