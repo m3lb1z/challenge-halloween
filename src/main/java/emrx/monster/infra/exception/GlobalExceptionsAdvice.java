@@ -24,6 +24,11 @@ public class GlobalExceptionsAdvice {
         return ResponseEntity.badRequest().body(errors);
     }
 
+    @ExceptionHandler(ValidationIntegrity.class)
+    public ResponseEntity errorHandlerValidacionDeIntegridad(Exception ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<String> handleValidationException(ValidationException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());

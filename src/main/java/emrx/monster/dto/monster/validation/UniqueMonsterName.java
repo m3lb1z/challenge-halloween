@@ -1,6 +1,7 @@
 package emrx.monster.dto.monster.validation;
 
 import emrx.monster.dto.monster.MonsterDTO;
+import emrx.monster.model.Monster;
 import emrx.monster.repository.MonsterRepository;
 import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Component;
@@ -16,8 +17,9 @@ public class UniqueMonsterName implements MonsterValidation {
 
     @Override
     public void validate(MonsterDTO monsterDTO) {
-        if(monsterRepository.existsByNameIgnoreCase(monsterDTO.getName())) {
-            throw new ValidationException("Monster with name " + monsterDTO.getName() + " already exists");
+        Monster monster = monsterRepository.findByNameIgnoreCase(monsterDTO.getName()).orElse(null);
+        if(monster != null && !monster.getId().equals(monsterDTO.getId())) {
+            throw new ValidationException("El monstruo con el nombre " + monsterDTO.getName() + " ya existe.");
         }
     }
 }

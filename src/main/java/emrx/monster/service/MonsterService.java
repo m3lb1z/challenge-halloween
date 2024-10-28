@@ -3,6 +3,7 @@ package emrx.monster.service;
 import emrx.monster.dto.AppearanceDTO;
 import emrx.monster.dto.monster.MonsterDTO;
 import emrx.monster.dto.monster.validation.MonsterValidation;
+import emrx.monster.infra.exception.ValidationIntegrity;
 import emrx.monster.mapper.AppearanceMapper;
 import emrx.monster.mapper.MonsterMapper;
 import emrx.monster.model.Appearance;
@@ -75,6 +76,7 @@ public class MonsterService {
     }
 
     public Monster updateMonster(Long id, MonsterDTO monsterDTO) {
+        monsterDTO.setId(id);
         validations.forEach(validation -> validation.validate(monsterDTO));
         Monster updatingMonster = monsterMapper.toEntity(monsterDTO);
         Monster existingMonster = monsterRepository.findById(id).orElse(null);
@@ -85,8 +87,12 @@ public class MonsterService {
             if (updatingMonster.getType() != null && !updatingMonster.getType().isBlank()) {
                 existingMonster.setType(updatingMonster.getType());
             }
-            if (updatingMonster.getDangerLevel() > 0 && updatingMonster.getDangerLevel() <= 10) {
-                existingMonster.setDangerLevel(updatingMonster.getDangerLevel());
+            if(updatingMonster.getDangerLevel() != 0) {
+                if (updatingMonster.getDangerLevel() > 0 && updatingMonster.getDangerLevel() <= 10) {
+                    existingMonster.setDangerLevel(updatingMonster.getDangerLevel());
+                } else {
+                    throw new ValidationIntegrity("El nivel de peligro debe ser entre 1 y 10");
+                }
             }
             if (updatingMonster.getHabitat() != null && !updatingMonster.getHabitat().isBlank()) {
                 existingMonster.setHabitat(updatingMonster.getHabitat());

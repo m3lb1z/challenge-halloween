@@ -25,37 +25,37 @@ public class MonsterDTO {
     @JsonView(Views.Basic.class)
     private Long id;
 
-    @JsonView(Views.Basic.class)
+    @JsonView({Views.Basic.class, Views.Create.class})
     @NotEmpty(groups = OnCreate.class)
     private String name;
 
-    @JsonView(Views.Basic.class)
+    @JsonView({Views.Basic.class, Views.Create.class})
     @NotEmpty(groups = OnCreate.class)
     private String type;
 
-    @JsonView(Views.Basic.class)
-    @Range(groups = {OnCreate.class, OnUpdate.class}, min = 1, max = 10)
+    @JsonView({Views.Basic.class, Views.Create.class})
+    @Range(groups = OnCreate.class, min = 1, max = 10)
     private int dangerLevel;
 
-    @JsonView(Views.Create.class)
+    @JsonView({Views.Create.class, Views.Update.class})
     @NotNull(groups = OnCreate.class)
     private List<String> weaknesses;
 
-    @JsonView(Views.Create.class)
+    @JsonView({Views.Create.class, Views.Update.class})
     private List<String> powers;
 
     @JsonView
     private List<AppearanceDTO> appearances;
 
-    @JsonView(Views.Basic.class)
+    @JsonView({Views.Basic.class, Views.Create.class})
     @NotEmpty(groups = OnCreate.class)
     private String habitat;
 
-    @JsonView(Views.Basic.class)
+    @JsonView({Views.Basic.class, Views.Create.class})
     @NotEmpty(groups = OnCreate.class)
     private String description;
 
-    @JsonView(Views.Basic.class)
+    @JsonView({Views.Basic.class, Views.Create.class})
     @NotEmpty(groups = OnCreate.class)
     private String imageUrl;
 

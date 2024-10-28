@@ -102,7 +102,6 @@ public class MonsterController {
     @JsonView(Views.Update.class)
     public ResponseEntity<MonsterDTO> updateMonster(
             @PathVariable Long id,
-            @Validated(OnUpdate.class)
             @RequestBody @JsonView(Views.Update.class) MonsterDTO monsterDTO) {
         Monster updatedMonster = monsterService.updateMonster(id, monsterDTO);
         if (updatedMonster != null) {

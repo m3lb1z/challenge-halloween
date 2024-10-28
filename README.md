@@ -9,7 +9,7 @@
 
 ## Descripción 
 
-Esta API permite la gestión de monstruos de Halloween, almacenando atributos como poderes, debilidades, apariencia y nivel de peligro. Cuenta con autenticación basada en **Spring Security Basic Authentication** y está documentada con **Swagger** para facilitar su uso y pruebas.
+Esta API permite la gestión de monstruos de Halloween, almacenando atributos como poderes, debilidades, apariciones y nivel de peligro. Cuenta con autenticación basada en **Spring Security Basic Authentication** y está documentada con **Swagger** para facilitar su uso y pruebas.
 
 ## Características
 - **Registro y gestión de monstruos** con atributos personalizados.
